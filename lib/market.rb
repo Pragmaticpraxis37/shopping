@@ -77,19 +77,21 @@ class Market
     if total < quantity
       false
     else
-      decrease_stock(item_sell, quantity)
+      decrease_stocks(item_sell, quantity)
       true
     end
   end
 
-  def decrease_stock(item_sell, quantity)
+  def decrease_stocks(item_sell, quantity)
     @vendors.each do |vendor|
       vendor.inventory.each do |item, item_quantity|
         if item_sell == item
           if item_quantity >= quantity
-            item_quantity -= quantity
+            vendor.decrease_stock(item_sell, quantity)
+            quantity -= item_quantity
           else
-            require "pry"; binding.pry
+            vendor.decrease_stock(item_sell, item_quantity)
+            quantity -= item_quantity
           end
         end
       end
